@@ -1,0 +1,33 @@
+:root {
+    --bg-color: #050508;
+    --text-main: #f0f0f5;
+    --text-muted: #8892b0;
+    --accent: #00f0ff;
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background-color: var(--bg-color); color: var(--text-main); font-family: 'Inter', sans-serif; overflow-x: hidden; line-height: 1.6; }
+#networkCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; }
+nav { display: flex; justify-content: space-between; align-items: center; padding: 2rem 5%; position: fixed; width: 100%; top: 0; z-index: 100; backdrop-filter: blur(10px); border-bottom: 1px solid var(--glass-border); }
+.logo { font-size: 1.5rem; font-weight: 800; letter-spacing: 2px; }
+.logo span { color: var(--accent); }
+.nav-links { display: flex; align-items: center; gap: 2rem; }
+.server-time { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--accent); border: 1px solid var(--glass-border); padding: 5px 10px; border-radius: 4px; }
+.nav-links a { color: var(--text-main); text-decoration: none; font-size: 0.9rem; font-weight: 600; }
+.hero { height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; }
+.hero-content { z-index: 1; }
+.tagline { font-family: 'JetBrains Mono', monospace; color: var(--accent); margin-bottom: 1rem; font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; }
+h1 { font-size: 4.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; background: linear-gradient(45deg, var(--text-main), var(--text-muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.progress-bar { width: 100%; height: 8px; background: var(--glass-border); border-radius: 4px; overflow: hidden; margin-top: 10px; }
+.progress { height: 100%; background: var(--accent); }
+section { padding: 100px 5%; max-width: 1200px; margin: 0 auto; }
+.section-header { margin-bottom: 4rem; }
+.section-header h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; }
+.card { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 2rem; border-radius: 12px; backdrop-filter: blur(10px); }
+.terminal-window { background: #0a0a0f; border: 1px solid var(--glass-border); border-radius: 8px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.5); font-family: 'JetBrains Mono', monospace; }
+.terminal-header { background: #1a1a24; padding: 10px; display: flex; align-items: center; border-bottom: 1px solid var(--glass-border); }
+.dot { width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; }
+.red { background: #ff5f56; } .yellow { background: #ffbd2e; } .green { background: #27c93f; }
+.terminal-body { padding: 20px; color: #00ff00; min-height: 250px; font-size: 0.9rem; line-height: 1.5; }

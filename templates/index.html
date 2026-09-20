@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eren Labs | Dynamic AGI Backend</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <canvas id="networkCanvas"></canvas>
+    
+    <nav>
+        <div class="logo">EREN<span>LABS</span></div>
+        <div class="nav-links">
+            <span class="server-time">Server Time: {{ server_time }}</span>
+            <a href="#research">Live Research</a>
+            <a href="#system">System Status</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <div class="tagline">Connected to Python Backend</div>
+            <h1 class="glitch" data-text="Dynamic AGI Core">Dynamic AGI Core</h1>
+            <p class="typewriter-container"><span id="typewriter"></span><span class="cursor">|</span></p>
+        </div>
+    </header>
+
+    <section id="research" class="fade-in">
+        <div class="section-header">
+            <h2>Live Research Projects</h2>
+            <p>This data is injected dynamically from the Python Flask server.</p>
+        </div>
+        <div class="grid">
+            {% for project in projects %}
+            <div class="card">
+                <h3>{{ project.title }}</h3>
+                <p>Status: <strong style="color: var(--accent);">{{ project.status }}</strong></p>
+                <div class="progress-bar">
+                    <div class="progress" style="width: {{ project.progress }}%;"></div>
+                </div>
+                <p style="text-align: right; font-size: 0.8rem; margin-top: 5px;">{{ project.progress }}%</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section id="system" class="fade-in">
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+                <span class="title">Live Azure Server Metrics (Node/Python)</span>
+            </div>
+            <div class="terminal-body" id="live-metrics">
+                <div>Fetching live API data from /api/system_status...</div>
+                <div id="metrics-output"></div>
+            </div>
+        </div>
+    </section>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
