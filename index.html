@@ -1,186 +1,87 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Advanced Internet Audit</title>
-  <link rel="stylesheet" href="/assets/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eren Labs | AGI Research</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header class="topbar">
-    <div>
-      <div class="eyebrow">Network Operations</div>
-      <h1>Advanced Internet Audit</h1>
-    </div>
-    <div class="top-actions">
-      <button id="loadLatestButton" type="button">Load Latest</button>
-      <button id="startButton" type="button" class="primary">Start Audit</button>
-      <button id="cancelButton" type="button" class="danger" disabled>Cancel</button>
-    </div>
-  </header>
-
-  <div class="app-grid">
-    <aside class="control-panel">
-      <form id="auditForm">
-        <section class="control-section">
-          <h2>Targets</h2>
-          <label>Ping Targets<textarea id="targets" rows="4" spellcheck="false"></textarea></label>
-          <label>DNS Domains<textarea id="domains" rows="4" spellcheck="false"></textarea></label>
-          <label>HTTP URLs<textarea id="urls" rows="5" spellcheck="false"></textarea></label>
-          <label>TCP Targets<textarea id="tcpTargets" rows="4" spellcheck="false"></textarea></label>
-          <label>DNS Resolvers<textarea id="dnsServers" rows="3" spellcheck="false"></textarea></label>
-          <label>DNS Record Types<textarea id="dnsQtypes" rows="2" spellcheck="false"></textarea></label>
-        </section>
-
-        <section class="control-section">
-          <h2>Route</h2>
-          <label>Traceroute Target<input id="tracerouteTarget" type="text" spellcheck="false"></label>
-          <label>MTU Target<input id="mtuTarget" type="text" spellcheck="false"></label>
-          <label>Probe Mode
-            <select id="tracerouteMode">
-              <option value="udp">UDP</option>
-              <option value="icmp">ICMP</option>
-              <option value="tcp">TCP</option>
-            </select>
-          </label>
-          <div class="two-col">
-            <label>Max Hops<input id="maxHops" type="number" min="1" max="64"></label>
-            <label>Trace Probes<input id="traceProbes" type="number" min="1" max="10"></label>
-          </div>
-          <div class="two-col">
-            <label>Trace Timeout<input id="traceTimeout" type="number" min="1" max="20"></label>
-            <label>TCP Trace Port<input id="tracerouteTcpPort" type="number" min="1" max="65535"></label>
-          </div>
-          <div class="two-col">
-            <label>Live Interval<input id="liveInterval" type="number" min="8" max="120" value="20"></label>
-          </div>
-        </section>
-
-        <section class="control-section">
-          <h2>Depth</h2>
-          <div class="range-row">
-            <label for="pingCount">Ping Count</label>
-            <input id="pingCount" type="range" min="1" max="100">
-            <output id="pingCountValue"></output>
-          </div>
-          <div class="range-row">
-            <label for="pingSize">Ping Size</label>
-            <input id="pingSize" type="range" min="0" max="1472">
-            <output id="pingSizeValue"></output>
-          </div>
-          <div class="range-row">
-            <label for="workers">Workers</label>
-            <input id="workers" type="range" min="1" max="32">
-            <output id="workersValue"></output>
-          </div>
-          <div class="two-col">
-            <label>Ping Timeout<input id="pingTimeout" type="number" min="1" max="30"></label>
-            <label>TCP Timeout<input id="tcpTimeout" type="number" min="1" max="30"></label>
-          </div>
-          <div class="two-col">
-            <label>TCP Attempts<input id="tcpAttempts" type="number" min="1" max="20"></label>
-            <label>DNS Timeout<input id="dnsTimeout" type="number" min="1" max="30"></label>
-          </div>
-          <label>HTTP Timeout<input id="httpTimeout" type="number" min="1" max="60"></label>
-          <div class="toggles">
-            <label><input id="runSpeedtest" type="checkbox"> Run Speed Test</label>
-            <label><input id="geolocateRoute" type="checkbox"> Geolocate Route</label>
-            <label><input id="probeMtu" type="checkbox"> Probe MTU</label>
-          </div>
-        </section>
-      </form>
-    </aside>
-
-    <main class="workspace">
-      <section class="status-strip">
-        <div class="status-main">
-          <span id="statusStage">Idle</span>
-          <strong id="statusMessage">Ready</strong>
+    <canvas id="networkCanvas"></canvas>
+    
+    <nav>
+        <div class="logo">EREN<span>LABS</span></div>
+        <div class="nav-links">
+            <a href="#about">About</a>
+            <a href="#research">Research</a>
+            <a href="#publications">Publications</a>
+            <a href="#contact" class="btn">Join Us</a>
         </div>
-        <div class="progress-shell"><div id="progressBar"></div></div>
-      </section>
+    </nav>
 
-      <section class="kpi-grid">
-        <div class="kpi"><span>Public IP</span><strong id="kpiPublicIp">n/a</strong></div>
-        <div class="kpi"><span>Download</span><strong id="kpiDownload">n/a</strong></div>
-        <div class="kpi"><span>Avg Latency</span><strong id="kpiLatency">n/a</strong></div>
-        <div class="kpi"><span>Max Loss</span><strong id="kpiLoss">n/a</strong></div>
-        <div class="kpi"><span>Avg DNS</span><strong id="kpiDns">n/a</strong></div>
-        <div class="kpi"><span>Hops</span><strong id="kpiHops">n/a</strong></div>
-      </section>
+    <header class="hero">
+        <div class="hero-content">
+            <div class="tagline">Pioneering the Future of Intelligence</div>
+            <h1 class="glitch" data-text="Artificial General Intelligence">Artificial General Intelligence</h1>
+            <p class="typewriter-container"><span id="typewriter"></span><span class="cursor">|</span></p>
+            <div class="cta-buttons">
+                <a href="#research" class="btn-primary">Explore Our Research</a>
+                <a href="#about" class="btn-secondary">Our Mission</a>
+            </div>
+        </div>
+    </header>
 
-      <section class="surface split">
-        <div>
-          <div class="section-head">
-            <h2>Findings</h2>
-            <button id="copyFindingsButton" type="button">Copy</button>
-          </div>
-          <ul id="findingsList" class="findings"></ul>
+    <section id="research" class="fade-in">
+        <div class="section-header">
+            <h2>Core Research Areas</h2>
+            <p>Developing robust, scalable, and aligned cognitive architectures.</p>
         </div>
-        <div>
-          <div class="section-head">
-            <h2>Downloads</h2>
-          </div>
-          <div class="download-grid">
-            <a id="downloadJson" class="button disabled">JSON</a>
-            <a id="downloadMarkdown" class="button disabled">Markdown</a>
-            <a id="downloadCapabilities" class="button disabled">Capabilities</a>
-            <a id="downloadMap" class="button disabled">HTML Map</a>
-            <button id="exportMapButton" type="button" disabled>Map PNG</button>
-          </div>
+        <div class="grid">
+            <div class="card">
+                <div class="card-icon">🧠</div>
+                <h3>Neural-Symbolic Integration</h3>
+                <p>Bridging the gap between deep learning perception and logical reasoning for reliable AI systems.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">⚙️</div>
+                <h3>Autonomous Agents</h3>
+                <p>Building long-horizon planning agents capable of self-reflection and dynamic environment adaptation.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🛡️</div>
+                <h3>Alignment & Safety</h3>
+                <p>Ensuring advanced models remain aligned with human values through constitutional AI and interpretability.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🧬</div>
+                <h3>Cognitive Architectures</h3>
+                <p>Designing multi-modal memory systems that replicate human-like episodic and semantic recall.</p>
+            </div>
         </div>
-      </section>
+    </section>
 
-      <section class="surface">
-        <div class="section-head">
-          <h2>Route Map</h2>
-          <div class="button-row">
-            <button id="liveRouteButton" type="button">Live Route</button>
-            <button id="stopLiveRouteButton" type="button" disabled>Stop Live</button>
-          </div>
+    <section id="terminal" class="fade-in">
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+                <span class="title">sys_monitor@erenlabs:~</span>
+            </div>
+            <div class="terminal-body" id="terminal-output">
+                <!-- Terminal text populated by JS -->
+            </div>
         </div>
-        <canvas id="routeCanvas" class="route-canvas"></canvas>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Hop</th><th>IP</th><th>RTT</th><th>Approx Location</th><th>ISP / Org</th></tr></thead>
-            <tbody id="routeTable"></tbody>
-          </table>
-        </div>
-      </section>
+    </section>
 
-      <section class="chart-grid">
-        <div class="surface">
-          <div class="section-head"><h2>Latency</h2></div>
-          <canvas id="latencyChart" class="chart"></canvas>
+    <footer>
+        <div class="footer-content">
+            <div class="logo">EREN<span>LABS</span></div>
+            <p>&copy; 2026 Eren Labs AGI Research. All rights reserved.</p>
         </div>
-        <div class="surface">
-          <div class="section-head"><h2>DNS Timing</h2></div>
-          <canvas id="dnsChart" class="chart"></canvas>
-        </div>
-        <div class="surface wide">
-          <div class="section-head"><h2>HTTP / TLS Waterfall</h2></div>
-          <canvas id="httpChart" class="chart"></canvas>
-        </div>
-      </section>
+    </footer>
 
-      <section class="surface split">
-        <div>
-          <div class="section-head"><h2>Job Timeline</h2></div>
-          <ol id="eventLog" class="event-log"></ol>
-        </div>
-        <div>
-          <div class="section-head"><h2>History</h2></div>
-          <div id="historyList" class="history-list"></div>
-        </div>
-      </section>
-
-      <section class="surface">
-        <div class="section-head"><h2>Capabilities</h2></div>
-        <ul id="capabilityList" class="capability-list"></ul>
-      </section>
-    </main>
-  </div>
-
-  <script src="/assets/app.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
