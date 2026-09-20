@@ -1,0 +1,606 @@
+{
+  "jobs": [
+    {
+      "completed_at": "2026-09-19T08:32:49+00:00",
+      "config": {
+        "dns_qtypes": [
+          "A",
+          "AAAA"
+        ],
+        "dns_servers": [
+          "1.1.1.1",
+          "8.8.8.8",
+          "9.9.9.9"
+        ],
+        "dns_timeout": 3,
+        "domains": [
+          "cloudflare.com",
+          "google.com",
+          "github.com",
+          "openai.com"
+        ],
+        "geolocate_route": true,
+        "http_timeout": 10,
+        "max_hops": 30,
+        "mtu_target": "1.1.1.1",
+        "ping_count": 8,
+        "ping_size": 56,
+        "ping_timeout": 3,
+        "probe_mtu": true,
+        "run_speedtest": true,
+        "targets": [
+          "1.1.1.1",
+          "8.8.8.8",
+          "cloudflare.com",
+          "google.com"
+        ],
+        "tcp_attempts": 3,
+        "tcp_targets": [
+          "1.1.1.1:53",
+          "8.8.8.8:53",
+          "cloudflare.com:443",
+          "google.com:443",
+          "github.com:443"
+        ],
+        "tcp_timeout": 5,
+        "trace_probes": 3,
+        "trace_timeout": 3,
+        "traceroute_mode": "udp",
+        "traceroute_target": "1.1.1.1",
+        "traceroute_tcp_port": 443,
+        "urls": [
+          "https://www.cloudflare.com/cdn-cgi/trace",
+          "https://www.google.com/generate_204",
+          "https://github.com/"
+        ],
+        "workers": 8
+      },
+      "created_at": "2026-09-19T08:30:12+00:00",
+      "error": null,
+      "events": [
+        {
+          "message": "Audit queued",
+          "progress_pct": 0,
+          "stage": "queued",
+          "time": "2026-09-19T08:30:12+00:00"
+        },
+        {
+          "message": "Collecting local, gateway, public IP, and interface identity",
+          "progress_pct": 6,
+          "stage": "identity",
+          "time": "2026-09-19T08:30:12+00:00"
+        },
+        {
+          "message": "Running latency, TCP, DNS, and HTTP checks",
+          "progress_pct": 18,
+          "stage": "parallel-tests",
+          "time": "2026-09-19T08:30:12+00:00"
+        },
+        {
+          "message": "Latency and loss checks completed",
+          "progress_pct": 32,
+          "stage": "latency",
+          "time": "2026-09-19T08:30:20+00:00"
+        },
+        {
+          "message": "TCP reachability checks completed",
+          "progress_pct": 42,
+          "stage": "tcp",
+          "time": "2026-09-19T08:30:20+00:00"
+        },
+        {
+          "message": "HTTP, TLS, and system DNS checks completed",
+          "progress_pct": 52,
+          "stage": "http-dns",
+          "time": "2026-09-19T08:30:20+00:00"
+        },
+        {
+          "message": "Testing direct DNS resolvers",
+          "progress_pct": 60,
+          "stage": "direct-dns",
+          "time": "2026-09-19T08:30:20+00:00"
+        },
+        {
+          "message": "Measuring throughput",
+          "progress_pct": 70,
+          "stage": "throughput",
+          "time": "2026-09-19T08:30:21+00:00"
+        },
+        {
+          "message": "Tracing and geolocating the packet route",
+          "progress_pct": 80,
+          "stage": "route",
+          "time": "2026-09-19T08:31:20+00:00"
+        },
+        {
+          "message": "Probing IPv4 path MTU",
+          "progress_pct": 88,
+          "stage": "mtu",
+          "time": "2026-09-19T08:32:47+00:00"
+        },
+        {
+          "message": "Generating findings and writing downloadable reports",
+          "progress_pct": 94,
+          "stage": "analysis",
+          "time": "2026-09-19T08:32:49+00:00"
+        },
+        {
+          "message": "Audit completed",
+          "progress_pct": 100,
+          "stage": "completed",
+          "time": "2026-09-19T08:32:49+00:00"
+        }
+      ],
+      "id": "96dbe4dafa89",
+      "message": "Audit completed",
+      "output_dir": "/home/a/codex/internet_audit_runs/96dbe4dafa89",
+      "paths": {
+        "capabilities": "/home/a/codex/internet_audit_runs/96dbe4dafa89/internet_audit_capabilities.md",
+        "json": "/home/a/codex/internet_audit_runs/96dbe4dafa89/internet_audit_report.json",
+        "map": "/home/a/codex/internet_audit_runs/96dbe4dafa89/internet_route_map.html",
+        "markdown": "/home/a/codex/internet_audit_runs/96dbe4dafa89/internet_audit_report.md"
+      },
+      "progress_pct": 100,
+      "stage": "completed",
+      "status": "completed",
+      "summary": {
+        "avg_dns_ms": 52.9,
+        "avg_http_ms": 526.1,
+        "avg_latency_ms": 71.6,
+        "download_mbps": 23.39,
+        "findings_count": 2,
+        "hop_count": 32,
+        "local_ip": "192.168.1.36",
+        "max_loss_pct": 0.0,
+        "public_ip": "120.56.153.212",
+        "upload_mbps": null
+      },
+      "updated_at": "2026-09-19T08:32:49+00:00"
+    },
+    {
+      "completed_at": "2026-09-19T08:25:07+00:00",
+      "config": {
+        "dns_qtypes": [
+          "A",
+          "AAAA"
+        ],
+        "dns_servers": [
+          "1.1.1.1",
+          "8.8.8.8",
+          "9.9.9.9"
+        ],
+        "dns_timeout": 3,
+        "domains": [
+          "cloudflare.com",
+          "google.com",
+          "github.com",
+          "openai.com"
+        ],
+        "geolocate_route": true,
+        "http_timeout": 10,
+        "max_hops": 30,
+        "mtu_target": "1.1.1.1",
+        "ping_count": 8,
+        "ping_size": 56,
+        "ping_timeout": 3,
+        "probe_mtu": true,
+        "run_speedtest": true,
+        "targets": [
+          "1.1.1.1",
+          "8.8.8.8",
+          "cloudflare.com",
+          "google.com"
+        ],
+        "tcp_attempts": 3,
+        "tcp_targets": [
+          "1.1.1.1:53",
+          "8.8.8.8:53",
+          "cloudflare.com:443",
+          "google.com:443",
+          "github.com:443"
+        ],
+        "tcp_timeout": 5,
+        "trace_probes": 3,
+        "trace_timeout": 3,
+        "traceroute_mode": "udp",
+        "traceroute_target": "1.1.1.1",
+        "traceroute_tcp_port": 443,
+        "urls": [
+          "https://www.cloudflare.com/cdn-cgi/trace",
+          "https://www.google.com/generate_204",
+          "https://github.com/"
+        ],
+        "workers": 8
+      },
+      "created_at": "2026-09-19T08:22:33+00:00",
+      "error": null,
+      "events": [
+        {
+          "message": "Audit queued",
+          "progress_pct": 0,
+          "stage": "queued",
+          "time": "2026-09-19T08:22:33+00:00"
+        },
+        {
+          "message": "Collecting local, gateway, public IP, and interface identity",
+          "progress_pct": 6,
+          "stage": "identity",
+          "time": "2026-09-19T08:22:33+00:00"
+        },
+        {
+          "message": "Running latency, TCP, DNS, and HTTP checks",
+          "progress_pct": 18,
+          "stage": "parallel-tests",
+          "time": "2026-09-19T08:22:34+00:00"
+        },
+        {
+          "message": "Latency and loss checks completed",
+          "progress_pct": 32,
+          "stage": "latency",
+          "time": "2026-09-19T08:22:41+00:00"
+        },
+        {
+          "message": "TCP reachability checks completed",
+          "progress_pct": 42,
+          "stage": "tcp",
+          "time": "2026-09-19T08:22:41+00:00"
+        },
+        {
+          "message": "HTTP, TLS, and system DNS checks completed",
+          "progress_pct": 52,
+          "stage": "http-dns",
+          "time": "2026-09-19T08:22:41+00:00"
+        },
+        {
+          "message": "Testing direct DNS resolvers",
+          "progress_pct": 60,
+          "stage": "direct-dns",
+          "time": "2026-09-19T08:22:41+00:00"
+        },
+        {
+          "message": "Measuring throughput",
+          "progress_pct": 70,
+          "stage": "throughput",
+          "time": "2026-09-19T08:22:42+00:00"
+        },
+        {
+          "message": "Tracing and geolocating the packet route",
+          "progress_pct": 80,
+          "stage": "route",
+          "time": "2026-09-19T08:23:38+00:00"
+        },
+        {
+          "message": "Probing IPv4 path MTU",
+          "progress_pct": 88,
+          "stage": "mtu",
+          "time": "2026-09-19T08:25:05+00:00"
+        },
+        {
+          "message": "Generating findings and writing downloadable reports",
+          "progress_pct": 94,
+          "stage": "analysis",
+          "time": "2026-09-19T08:25:07+00:00"
+        },
+        {
+          "message": "Audit completed",
+          "progress_pct": 100,
+          "stage": "completed",
+          "time": "2026-09-19T08:25:07+00:00"
+        }
+      ],
+      "id": "c1623e830cff",
+      "message": "Audit completed",
+      "output_dir": "/home/a/codex/internet_audit_runs/c1623e830cff",
+      "paths": {
+        "capabilities": "/home/a/codex/internet_audit_runs/c1623e830cff/internet_audit_capabilities.md",
+        "json": "/home/a/codex/internet_audit_runs/c1623e830cff/internet_audit_report.json",
+        "map": "/home/a/codex/internet_audit_runs/c1623e830cff/internet_route_map.html",
+        "markdown": "/home/a/codex/internet_audit_runs/c1623e830cff/internet_audit_report.md"
+      },
+      "progress_pct": 100,
+      "stage": "completed",
+      "status": "completed",
+      "summary": {
+        "avg_dns_ms": 36.9,
+        "avg_http_ms": 519.7,
+        "avg_latency_ms": 70.0,
+        "download_mbps": 37.03,
+        "findings_count": 2,
+        "hop_count": 32,
+        "local_ip": "192.168.1.36",
+        "max_loss_pct": 0.0,
+        "public_ip": "120.56.153.212",
+        "upload_mbps": null
+      },
+      "updated_at": "2026-09-19T08:25:07+00:00"
+    },
+    {
+      "completed_at": "2026-09-19T08:11:43+00:00",
+      "config": {
+        "dns_qtypes": [
+          "A",
+          "AAAA",
+          "TXT"
+        ],
+        "dns_servers": [
+          "127.0.0.1"
+        ],
+        "dns_timeout": 1,
+        "domains": [
+          "localhost"
+        ],
+        "geolocate_route": false,
+        "http_timeout": 1,
+        "max_hops": 2,
+        "mtu_target": "127.0.0.1",
+        "ping_count": 1,
+        "ping_size": 32,
+        "ping_timeout": 1,
+        "probe_mtu": false,
+        "run_speedtest": false,
+        "targets": [
+          "127.0.0.1"
+        ],
+        "tcp_attempts": 1,
+        "tcp_targets": [
+          "127.0.0.1:80"
+        ],
+        "tcp_timeout": 1,
+        "trace_probes": 1,
+        "trace_timeout": 1,
+        "traceroute_mode": "udp",
+        "traceroute_target": "127.0.0.1",
+        "traceroute_tcp_port": 443,
+        "urls": [
+          "http://127.0.0.1"
+        ],
+        "workers": 2
+      },
+      "created_at": "2026-09-19T08:11:39+00:00",
+      "error": null,
+      "events": [
+        {
+          "message": "Audit queued",
+          "progress_pct": 0,
+          "stage": "queued",
+          "time": "2026-09-19T08:11:39+00:00"
+        },
+        {
+          "message": "Collecting local, gateway, public IP, and interface identity",
+          "progress_pct": 6,
+          "stage": "identity",
+          "time": "2026-09-19T08:11:39+00:00"
+        },
+        {
+          "message": "Running latency, TCP, DNS, and HTTP checks",
+          "progress_pct": 18,
+          "stage": "parallel-tests",
+          "time": "2026-09-19T08:11:40+00:00"
+        },
+        {
+          "message": "Latency and loss checks completed",
+          "progress_pct": 32,
+          "stage": "latency",
+          "time": "2026-09-19T08:11:40+00:00"
+        },
+        {
+          "message": "TCP reachability checks completed",
+          "progress_pct": 42,
+          "stage": "tcp",
+          "time": "2026-09-19T08:11:40+00:00"
+        },
+        {
+          "message": "HTTP, TLS, and system DNS checks completed",
+          "progress_pct": 52,
+          "stage": "http-dns",
+          "time": "2026-09-19T08:11:40+00:00"
+        },
+        {
+          "message": "Testing direct DNS resolvers",
+          "progress_pct": 60,
+          "stage": "direct-dns",
+          "time": "2026-09-19T08:11:40+00:00"
+        },
+        {
+          "message": "Measuring throughput",
+          "progress_pct": 70,
+          "stage": "throughput",
+          "time": "2026-09-19T08:11:43+00:00"
+        },
+        {
+          "message": "Tracing and geolocating the packet route",
+          "progress_pct": 80,
+          "stage": "route",
+          "time": "2026-09-19T08:11:43+00:00"
+        },
+        {
+          "message": "Probing IPv4 path MTU",
+          "progress_pct": 88,
+          "stage": "mtu",
+          "time": "2026-09-19T08:11:43+00:00"
+        },
+        {
+          "message": "Generating findings and writing downloadable reports",
+          "progress_pct": 94,
+          "stage": "analysis",
+          "time": "2026-09-19T08:11:43+00:00"
+        },
+        {
+          "message": "Audit completed",
+          "progress_pct": 100,
+          "stage": "completed",
+          "time": "2026-09-19T08:11:43+00:00"
+        }
+      ],
+      "id": "2d484363b8ec",
+      "message": "Audit completed",
+      "output_dir": "/home/a/codex/internet_audit_runs/2d484363b8ec",
+      "paths": {
+        "capabilities": "/home/a/codex/internet_audit_runs/2d484363b8ec/internet_audit_capabilities.md",
+        "json": "/home/a/codex/internet_audit_runs/2d484363b8ec/internet_audit_report.json",
+        "map": "/home/a/codex/internet_audit_runs/2d484363b8ec/internet_route_map.html",
+        "markdown": "/home/a/codex/internet_audit_runs/2d484363b8ec/internet_audit_report.md"
+      },
+      "progress_pct": 100,
+      "stage": "completed",
+      "status": "completed",
+      "summary": {
+        "avg_dns_ms": 750.5,
+        "avg_http_ms": 0.1,
+        "avg_latency_ms": 0.0,
+        "download_mbps": null,
+        "findings_count": 1,
+        "hop_count": 1,
+        "local_ip": "192.168.1.36",
+        "max_loss_pct": 0.0,
+        "public_ip": "120.56.153.212",
+        "upload_mbps": null
+      },
+      "updated_at": "2026-09-19T08:11:43+00:00"
+    },
+    {
+      "completed_at": "2026-09-19T08:10:18+00:00",
+      "config": {
+        "dns_qtypes": [
+          "A",
+          "AAAA",
+          "TXT"
+        ],
+        "dns_servers": [
+          "127.0.0.1"
+        ],
+        "dns_timeout": 1,
+        "domains": [
+          "localhost"
+        ],
+        "geolocate_route": false,
+        "http_timeout": 1,
+        "max_hops": 2,
+        "mtu_target": "127.0.0.1",
+        "ping_count": 1,
+        "ping_size": 32,
+        "ping_timeout": 1,
+        "probe_mtu": false,
+        "run_speedtest": false,
+        "targets": [
+          "127.0.0.1"
+        ],
+        "tcp_attempts": 1,
+        "tcp_targets": [
+          "127.0.0.1:80"
+        ],
+        "tcp_timeout": 1,
+        "trace_probes": 1,
+        "trace_timeout": 1,
+        "traceroute_mode": "udp",
+        "traceroute_target": "127.0.0.1",
+        "traceroute_tcp_port": 443,
+        "urls": [
+          "http://127.0.0.1"
+        ],
+        "workers": 2
+      },
+      "created_at": "2026-09-19T08:10:15+00:00",
+      "error": null,
+      "events": [
+        {
+          "message": "Audit queued",
+          "progress_pct": 0,
+          "stage": "queued",
+          "time": "2026-09-19T08:10:15+00:00"
+        },
+        {
+          "message": "Collecting local, gateway, public IP, and interface identity",
+          "progress_pct": 6,
+          "stage": "identity",
+          "time": "2026-09-19T08:10:15+00:00"
+        },
+        {
+          "message": "Running latency, TCP, DNS, and HTTP checks",
+          "progress_pct": 18,
+          "stage": "parallel-tests",
+          "time": "2026-09-19T08:10:15+00:00"
+        },
+        {
+          "message": "Latency and loss checks completed",
+          "progress_pct": 32,
+          "stage": "latency",
+          "time": "2026-09-19T08:10:15+00:00"
+        },
+        {
+          "message": "TCP reachability checks completed",
+          "progress_pct": 42,
+          "stage": "tcp",
+          "time": "2026-09-19T08:10:15+00:00"
+        },
+        {
+          "message": "HTTP, TLS, and system DNS checks completed",
+          "progress_pct": 52,
+          "stage": "http-dns",
+          "time": "2026-09-19T08:10:15+00:00"
+        },
+        {
+          "message": "Testing direct DNS resolvers",
+          "progress_pct": 60,
+          "stage": "direct-dns",
+          "time": "2026-09-19T08:10:15+00:00"
+        },
+        {
+          "message": "Measuring throughput",
+          "progress_pct": 70,
+          "stage": "throughput",
+          "time": "2026-09-19T08:10:18+00:00"
+        },
+        {
+          "message": "Tracing and geolocating the packet route",
+          "progress_pct": 80,
+          "stage": "route",
+          "time": "2026-09-19T08:10:18+00:00"
+        },
+        {
+          "message": "Probing IPv4 path MTU",
+          "progress_pct": 88,
+          "stage": "mtu",
+          "time": "2026-09-19T08:10:18+00:00"
+        },
+        {
+          "message": "Generating findings and writing downloadable reports",
+          "progress_pct": 94,
+          "stage": "analysis",
+          "time": "2026-09-19T08:10:18+00:00"
+        },
+        {
+          "message": "Audit completed",
+          "progress_pct": 100,
+          "stage": "completed",
+          "time": "2026-09-19T08:10:18+00:00"
+        }
+      ],
+      "id": "08695cd7770f",
+      "message": "Audit completed",
+      "output_dir": "/home/a/codex/internet_audit_runs/08695cd7770f",
+      "paths": {
+        "capabilities": "/home/a/codex/internet_audit_runs/08695cd7770f/internet_audit_capabilities.md",
+        "json": "/home/a/codex/internet_audit_runs/08695cd7770f/internet_audit_report.json",
+        "map": "/home/a/codex/internet_audit_runs/08695cd7770f/internet_route_map.html",
+        "markdown": "/home/a/codex/internet_audit_runs/08695cd7770f/internet_audit_report.md"
+      },
+      "progress_pct": 100,
+      "stage": "completed",
+      "status": "completed",
+      "summary": {
+        "avg_dns_ms": 750.7,
+        "avg_http_ms": 0.1,
+        "avg_latency_ms": 0.0,
+        "download_mbps": null,
+        "findings_count": 1,
+        "hop_count": 0,
+        "local_ip": "192.168.1.36",
+        "max_loss_pct": 0.0,
+        "public_ip": "120.56.153.212",
+        "upload_mbps": null
+      },
+      "updated_at": "2026-09-19T08:10:18+00:00"
+    }
+  ]
+}
