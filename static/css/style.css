@@ -19,6 +19,9 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 .hero-content { z-index: 1; }
 .tagline { font-family: 'JetBrains Mono', monospace; color: var(--accent); margin-bottom: 1rem; font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; }
 h1 { font-size: 4.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; background: linear-gradient(45deg, var(--text-main), var(--text-muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.external-link-text { color: var(--text-muted); margin: 1rem 0 0.75rem; }
+.external-link-btn { display: inline-block; color: var(--bg-color); background: var(--accent); text-decoration: none; font-weight: 700; padding: 0.7rem 1.2rem; border-radius: 8px; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.external-link-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0, 240, 255, 0.35); }
 .progress-bar { width: 100%; height: 8px; background: var(--glass-border); border-radius: 4px; overflow: hidden; margin-top: 10px; }
 .progress { height: 100%; background: var(--accent); }
 section { padding: 100px 5%; max-width: 1200px; margin: 0 auto; }
