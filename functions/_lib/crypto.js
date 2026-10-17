@@ -1,30 +1,59 @@
-// Password hashing (PBKDF2-SHA-256 via WebCrypto) and TOTP (RFC 6238).
-// Cloudflare Workers have no native Argon2; PBKDF2 with 600k iterations is
-// the strongest WebCrypto-native KDF available on this stack.
+// Password hashing (scrypt via node:crypto) and TOTP (RFC 6238).
+// scrypt N=2^17, r=8, p=1 meets current OWASP guidance. workerd's node:crypto
+// supports scrypt natively (nodejs_compat, default-on for this project's
+// 2026-10-17 compat date); argon2 is NOT available on this platform.
+// Legacy PBKDF2 hashes (pbkdf2$ prefix, workerd's 100k-iteration cap) still
+// verify so existing accounts keep working; new hashes are always scrypt.
+import { scrypt } from 'node:crypto';
 import { base32Encode, base32Decode, constEq } from './util.js';
 
-var ITER = 600000;
+// Hash cost is env-tunable (SCRYPT_N) so ops can lower it without a deploy
+// if platform CPU enforcement ever tightens; bounds keep it honest.
+var SCRYPT_R = 8, SCRYPT_P = 1;
+var PBKDF2_ITER = 100000; // legacy path only
+
+export function scryptN(env) {
+  var n = parseInt((env && env.SCRYPT_N) || '131072', 10);
+  if (!(n >= 16384 && n <= 131072) || (n & (n - 1)) !== 0) return 131072;
+  return n;
+}
 
 function b64(bytes) { return btoa(String.fromCharCode.apply(null, new Uint8Array(bytes))); }
 function unb64(s) { return Uint8Array.from(atob(s), function (c) { return c.charCodeAt(0); }); }
 
-export async function hashPassword(password) {
+export async function hashPassword(password, env) {
+  var N = scryptN(env);
   var salt = new Uint8Array(16);
   crypto.getRandomValues(salt);
-  var key = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveBits']);
-  var bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt: salt, iterations: ITER }, key, 256);
-  return 'pbkdf2$' + ITER + '$' + b64(salt) + '$' + b64(bits);
+  var key = await new Promise(function (resolve, reject) {
+    scrypt(password, salt, 32, { N: N, r: SCRYPT_R, p: SCRYPT_P, maxmem: 256 * 1024 * 1024 },
+      function (err, derived) { err ? reject(err) : resolve(derived); });
+  });
+  return 'scrypt$' + N + '$' + SCRYPT_R + '$' + SCRYPT_P + '$' + b64(salt) + '$' + b64(key);
 }
 
 export async function verifyPassword(password, stored) {
   try {
     var parts = String(stored || '').split('$');
-    if (parts.length !== 4 || parts[0] !== 'pbkdf2') return false;
-    var iter = parseInt(parts[1], 10);
-    var salt = unb64(parts[2]);
-    var key = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveBits']);
-    var bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt: salt, iterations: iter }, key, 256);
-    return constEq(b64(bits), parts[3]);
+    if (parts[0] === 'scrypt' && parts.length === 6) {
+      var N = parseInt(parts[1], 10), r = parseInt(parts[2], 10), p = parseInt(parts[3], 10);
+      if (!(N >= 1024 && N <= 131072) || !(r >= 1 && r <= 32) || !(p >= 1 && p <= 16)) return false;
+      var salt = unb64(parts[4]);
+      var key = await new Promise(function (resolve, reject) {
+        scrypt(password, salt, 32, { N: N, r: r, p: p, maxmem: 256 * 1024 * 1024 },
+          function (err, derived) { err ? reject(err) : resolve(derived); });
+      });
+      return constEq(b64(key), parts[5]);
+    }
+    if (parts[0] === 'pbkdf2' && parts.length === 4) {
+      var iter = Math.min(parseInt(parts[1], 10) || 0, PBKDF2_ITER);
+      if (iter < 1) return false;
+      var psalt = unb64(parts[2]);
+      var pkey = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveBits']);
+      var bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt: psalt, iterations: iter }, pkey, 256);
+      return constEq(b64(bits), parts[3]);
+    }
+    return false;
   } catch (e) { return false; }
 }
 

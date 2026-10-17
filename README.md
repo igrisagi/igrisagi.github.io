@@ -15,9 +15,9 @@ Minimalist AGI research site on Cloudflare Pages + Pages Functions + D1.
 
 - Hosting: Cloudflare Pages (deploys from the `main` branch of this repo).
 - Compute: Pages Functions (`functions/`), D1 binding named `DB`.
-- Auth: email+password (PBKDF2-SHA-256, 600k iterations — the strongest KDF
-  available in Workers' WebCrypto; see "Known limitations"), Google OIDC,
-  phone OTP via Twilio. Sessions: random tokens stored as SHA-256 hashes,
+- Auth: email+password (scrypt N=2^17, r=8, p=1 via node:crypto - meets
+  current OWASP guidance; tunable via `SCRYPT_N`; legacy PBKDF2 hashes still
+  verify), Google OIDC, phone OTP via Twilio. Sessions: random tokens stored as SHA-256 hashes,
   HttpOnly Secure SameSite=Lax cookies, rotated on login, revocable.
 - Admin: provisioned via the `ADMIN_EMAILS` environment variable; requires a
   verified email and TOTP (RFC 6238) enrollment; admin sessions are elevated
@@ -71,8 +71,10 @@ preserved visitor counter, and static checks on the homepage.
 
 ## Known limitations
 
-- Argon2id is unavailable in Workers' WebCrypto; PBKDF2-SHA-256 with 600,000
-  iterations is used instead (OWASP-recommended parameter).
+- Argon2id is unavailable on Cloudflare Workers (neither WebCrypto nor
+  node:crypto); scrypt N=2^17, r=8, p=1 (OWASP-recommended) is used instead,
+  verified working on the free plan. Legacy PBKDF2 hashes still verify
+  (workerd caps PBKDF2 at 100k iterations).
 - Without `EMAIL_PROVIDER`, verification and reset links are not delivered;
   they appear only in the admin outbox (development mode).
 - YouTube embeds on the old homepage were removed with the Videos section.

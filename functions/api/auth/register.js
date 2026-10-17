@@ -21,7 +21,7 @@ export async function onRequestPost(context) {
     var id = uid();
     await context.env.DB.prepare(
       'INSERT INTO users (id, display_name, email, password_hash) VALUES (?, ?, ?, ?)'
-    ).bind(id, name, em, await hashPassword(pw)).run();
+    ).bind(id, name, em, await hashPassword(pw, context.env)).run();
 
     var token = randomToken();
     var verifyExpiry = new Date(Date.now() + 24 * 3600 * 1000).toISOString();
