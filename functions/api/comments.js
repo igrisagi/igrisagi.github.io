@@ -1,5 +1,6 @@
 import { json, abort, handle, readJson, str, uid } from '../_lib/util.js';
 import { requireUser, assertCsrf, limited, getSession } from '../_lib/auth.js';
+import { requireTurnstile } from '../_lib/turnstile.js';
 
 export async function onRequestGet(context) {
   return handle(async function () {
@@ -34,6 +35,7 @@ export async function onRequestPost(context) {
     await limited(context.env, context.request, 'comment', 30, 3600);
     var ctx = await requireUser(context.env, context.request);
     var data = await readJson(context.request);
+    await requireTurnstile(context.env, context.request, data.turnstile_token);
     var body = str(data.body, 1, 1000, 'comment');
     var id = uid();
     await context.env.DB.prepare('INSERT INTO comments (id, user_id, body) VALUES (?, ?, ?)')

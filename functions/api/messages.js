@@ -1,5 +1,6 @@
 import { json, abort, handle, readJson, str, uid } from '../_lib/util.js';
 import { requireUser, assertCsrf, limited } from '../_lib/auth.js';
+import { requireTurnstile } from '../_lib/turnstile.js';
 
 // Private messages between one visitor and ErenLabs. Never public.
 export async function onRequestGet(context) {
@@ -18,6 +19,7 @@ export async function onRequestPost(context) {
     await limited(context.env, context.request, 'message', 20, 3600);
     var ctx = await requireUser(context.env, context.request);
     var data = await readJson(context.request);
+    await requireTurnstile(context.env, context.request, data.turnstile_token);
     var subject = str(data.subject, 1, 120, 'subject');
     var body = str(data.body, 1, 5000, 'message');
 

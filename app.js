@@ -61,7 +61,37 @@ var vt = setInterval(function () {
 
 // ---- session state ----
 var me = null, providers = { email: true, google: false, phone: false };
-api('/api/auth/providers').then(function (d) { providers = d; }).catch(function () {});
+var tsKey = null, tsWidgets = {};
+api('/api/auth/providers').then(function (d) {
+  providers = d;
+  tsKey = d.turnstile_site_key || null;
+  if (tsKey) {
+    var sc = document.createElement('script');
+    sc.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+    sc.async = true; sc.defer = true;
+    document.head.appendChild(sc);
+  }
+}).catch(function () {});
+// Cloudflare Turnstile: rendered only when the server reports a site key.
+function mountTs(elId, tries) {
+  if (!tsKey || !el(elId)) return;
+  if (tsWidgets[elId] !== undefined) return;
+  if (window.turnstile) {
+    window.turnstile.ready(function () {
+      if (el(elId) && tsWidgets[elId] === undefined) {
+        tsWidgets[elId] = window.turnstile.render('#' + elId, { sitekey: tsKey });
+      }
+    });
+    return;
+  }
+  if ((tries || 0) < 25) setTimeout(function () { mountTs(elId, (tries || 0) + 1); }, 400);
+}
+function tsToken(elId) {
+  return tsKey && tsWidgets[elId] !== undefined ? window.turnstile.getResponse(tsWidgets[elId]) : null;
+}
+function tsReset(elId) {
+  if (tsKey && tsWidgets[elId] !== undefined) window.turnstile.reset(tsWidgets[elId]);
+}
 function refreshSession() {
   return api('/api/auth/session').then(function (d) {
     me = d.authenticated ? d.user : null;
@@ -111,6 +141,7 @@ function renderAuth(mode, notice) {
     authTitle.textContent = 'Sign in';
     html += fieldHtml('a_email', 'Email', 'email', 'email') +
       fieldHtml('a_pw', 'Password', 'password', 'current-password') +
+      '<div class="ts" id="a_ts"></div>' +
       '<p><button type="button" class="action" id="a_go">Sign in</button></p>' +
       '<p class="status" id="a_status"></p>' +
       '<p class="small"><button type="button" class="linklike" id="a_forgot">Forgot password</button> &middot; <button type="button" class="linklike" id="a_register">Create an account</button></p>';
@@ -120,6 +151,7 @@ function renderAuth(mode, notice) {
     html += fieldHtml('a_name', 'Display name', 'text', 'nickname') +
       fieldHtml('a_email', 'Email', 'email', 'email') +
       fieldHtml('a_pw', 'Password (10+ characters)', 'password', 'new-password') +
+      '<div class="ts" id="a_ts"></div>' +
       '<p><button type="button" class="action" id="a_go">Create account</button></p>' +
       '<p class="status" id="a_status"></p>' +
       '<p class="small"><button type="button" class="linklike" id="a_signin">Back to sign in</button></p>';
@@ -136,6 +168,7 @@ function renderAuth(mode, notice) {
       '<p class="status" id="a_status"></p>';
   }
   authBody.innerHTML = html;
+  mountTs('a_ts');
   var statusEl = el('a_status');
   function fail(e) { statusEl.textContent = e.message || 'Something went wrong.'; statusEl.className = 'status err'; }
   if (el('a_signin')) el('a_signin').addEventListener('click', function () { renderAuth('signin'); });
@@ -145,21 +178,21 @@ function renderAuth(mode, notice) {
   el('a_go').addEventListener('click', function () {
     var btn = el('a_go'); btn.disabled = true;
     if (mode === 'signin') {
-      api('/api/auth/login', 'POST', { email: el('a_email').value, password: el('a_pw').value })
+      api('/api/auth/login', 'POST', { email: el('a_email').value, password: el('a_pw').value, turnstile_token: tsToken('a_ts') })
         .then(function () { return refreshSession(); })
         .then(function () { hideAuth(); afterAuth(); })
-        .catch(function (e) { btn.disabled = false; fail(e); });
+        .catch(function (e) { btn.disabled = false; tsReset('a_ts'); fail(e); });
     } else if (mode === 'register') {
-      api('/api/auth/register', 'POST', { display_name: el('a_name').value, email: el('a_email').value, password: el('a_pw').value })
+      api('/api/auth/register', 'POST', { display_name: el('a_name').value, email: el('a_email').value, password: el('a_pw').value, turnstile_token: tsToken('a_ts') })
         .then(function (d) {
           return refreshSession().then(function () {
             hideAuth(); afterAuth();
             if (d.verification_required) alertInline('Account created. Check your email for a verification link before posting or messaging.');
           });
         })
-        .catch(function (e) { btn.disabled = false; fail(e); });
+        .catch(function (e) { btn.disabled = false; tsReset('a_ts'); fail(e); });
     } else if (mode === 'forgot') {
-      api('/api/auth/request-reset', 'POST', { email: el('a_email').value })
+      api('/api/auth/request-reset', 'POST', { email: el('a_email').value, turnstile_token: tsToken('a_ts') })
         .then(function () { renderAuth('signin', 'If that address has an account, a reset link is on its way.'); })
         .catch(function (e) { btn.disabled = false; fail(e); });
     } else if (mode === 'reset') {
@@ -205,17 +238,20 @@ function renderMessages() {
     html += '<div style="margin-top:12px">' +
       '<label for="m_subject">Subject</label><input class="field" id="m_subject" maxlength="120">' +
       '<label for="m_body">Message</label><textarea class="field" id="m_body" maxlength="5000"></textarea>' +
+      '<div class="ts" id="m_ts"></div>' +
       '<button type="button" class="action" id="m_send">Send</button>' +
       '<p class="status" id="m_status"></p></div>';
     msgPanel.innerHTML = html;
     msgPanel.scrollTop = 0;
+    mountTs('m_ts');
     el('m_send').addEventListener('click', function () {
       var btn = el('m_send'); btn.disabled = true;
       el('m_status').textContent = 'Sending...';
-      api('/api/messages', 'POST', { subject: el('m_subject').value, body: el('m_body').value })
+      api('/api/messages', 'POST', { subject: el('m_subject').value, body: el('m_body').value, turnstile_token: tsToken('m_ts') })
         .then(function () { renderMessages(); })
         .catch(function (e) {
           btn.disabled = false;
+          tsReset('m_ts');
           el('m_status').textContent = e.code === 'unverified' ? 'Verify your email address first.' : (e.message || 'Could not send.');
           el('m_status').className = 'status err';
         });
@@ -293,15 +329,18 @@ function renderCommentForm() {
   }
   box.innerHTML = '<label for="c_body">Add a comment as ' + esc(me.display_name) + '</label>' +
     '<textarea class="field" id="c_body" maxlength="1000"></textarea>' +
+    '<div class="ts" id="c_ts"></div>' +
     '<button type="button" class="action" id="c_post">Post</button>' +
     '<p class="status" id="c_status"></p>';
+  mountTs('c_ts');
   el('c_post').addEventListener('click', function () {
     var btn = el('c_post'); btn.disabled = true;
-    api('/api/comments', 'POST', { body: el('c_body').value }).then(function () {
+    api('/api/comments', 'POST', { body: el('c_body').value, turnstile_token: tsToken('c_ts') }).then(function () {
       el('c_body').value = ''; btn.disabled = false;
       cursor = null; loadComments();
     }).catch(function (e) {
       btn.disabled = false;
+      tsReset('c_ts');
       el('c_status').textContent = e.code === 'unverified' ? 'Verify your email address first.' : (e.message || 'Could not post.');
       el('c_status').className = 'status err';
     });
