@@ -16,8 +16,8 @@ Minimalist AGI research site on Cloudflare Pages + Pages Functions + D1.
 - Hosting: Cloudflare Pages (deploys from the `main` branch of this repo).
 - Compute: Pages Functions (`functions/`), D1 binding named `DB`.
 - Auth: email+password (scrypt N=2^17, r=8, p=1 via node:crypto - meets
-  current OWASP guidance; legacy PBKDF2 hashes still verify), Google OIDC,
-  phone OTP via Twilio. Sessions: random tokens stored as SHA-256 hashes,
+  current OWASP guidance; tunable via `SCRYPT_N`; legacy PBKDF2 hashes still
+  verify), Google OIDC, phone OTP via Twilio. Sessions: random tokens stored as SHA-256 hashes,
   HttpOnly Secure SameSite=Lax cookies, rotated on login, revocable.
 - Admin: provisioned via the `ADMIN_EMAILS` environment variable; requires a
   verified email and TOTP (RFC 6238) enrollment; admin sessions are elevated
