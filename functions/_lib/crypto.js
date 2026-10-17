@@ -1,9 +1,11 @@
 // Password hashing (PBKDF2-SHA-256 via WebCrypto) and TOTP (RFC 6238).
-// Cloudflare Workers have no native Argon2; PBKDF2 with 600k iterations is
-// the strongest WebCrypto-native KDF available on this stack.
+// Cloudflare Workers have no native Argon2, and workerd hard-caps PBKDF2 at
+// 100,000 iterations (deriveBits throws above that - Node does not enforce
+// this, so it only shows up deployed). 100k is the strongest KDF this stack
+// allows; the iteration count is stored per-hash for future upgrades.
 import { base32Encode, base32Decode, constEq } from './util.js';
 
-var ITER = 600000;
+var ITER = 100000;
 
 function b64(bytes) { return btoa(String.fromCharCode.apply(null, new Uint8Array(bytes))); }
 function unb64(s) { return Uint8Array.from(atob(s), function (c) { return c.charCodeAt(0); }); }

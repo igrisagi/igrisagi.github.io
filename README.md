@@ -15,7 +15,7 @@ Minimalist AGI research site on Cloudflare Pages + Pages Functions + D1.
 
 - Hosting: Cloudflare Pages (deploys from the `main` branch of this repo).
 - Compute: Pages Functions (`functions/`), D1 binding named `DB`.
-- Auth: email+password (PBKDF2-SHA-256, 600k iterations — the strongest KDF
+- Auth: email+password (PBKDF2-SHA-256, 100k iterations — workerd caps PBKDF2 at 100k;
   available in Workers' WebCrypto; see "Known limitations"), Google OIDC,
   phone OTP via Twilio. Sessions: random tokens stored as SHA-256 hashes,
   HttpOnly Secure SameSite=Lax cookies, rotated on login, revocable.
