@@ -2,12 +2,15 @@ import { json, abort, handle, readJson, str, email, uid, randomToken, sha256hex 
 import { hashPassword } from '../../_lib/crypto.js';
 import { createSession, sessionCookie, assertCsrf, limited, maybeProvisionAdmin } from '../../_lib/auth.js';
 import { sendMail } from '../../_lib/mail.js';
+import { requireTurnstile } from '../../_lib/turnstile.js';
 
 export async function onRequestPost(context) {
   return handle(async function () {
     assertCsrf(context.request);
+    var data0 = await readJson(context.request);
+    await requireTurnstile(context.env, context.request, data0.turnstile_token);
+    var data = data0;
     await limited(context.env, context.request, 'register', 10, 3600);
-    var data = await readJson(context.request);
     var em = email(data.email);
     var name = str(data.display_name, 1, 40, 'display name');
     var pw = String(data.password || '');

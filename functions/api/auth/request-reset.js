@@ -1,12 +1,14 @@
 import { json, handle, readJson, email, randomToken, sha256hex } from '../../_lib/util.js';
 import { assertCsrf, limited } from '../../_lib/auth.js';
 import { sendMail } from '../../_lib/mail.js';
+import { requireTurnstile } from '../../_lib/turnstile.js';
 
 export async function onRequestPost(context) {
   return handle(async function () {
     assertCsrf(context.request);
     await limited(context.env, context.request, 'reset', 5, 3600);
     var data = await readJson(context.request);
+    await requireTurnstile(context.env, context.request, data.turnstile_token);
     var em = email(data.email);
     var user = await context.env.DB.prepare('SELECT id, display_name FROM users WHERE email = ?').bind(em).first();
     if (user) {
