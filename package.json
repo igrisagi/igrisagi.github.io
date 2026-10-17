@@ -1,0 +1,8 @@
+{
+  "name": "erenlabs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-sqlite --test tests/"
+  }
+}
