@@ -20,7 +20,7 @@ export async function onRequestPost(context) {
     }
     await context.env.DB.prepare("UPDATE email_tokens SET used_at = datetime('now') WHERE id = ?").bind(id).run();
     await context.env.DB.prepare("UPDATE users SET password_hash = ?, updated_at = datetime('now') WHERE id = ?")
-      .bind(await hashPassword(pw), row.user_id).run();
+      .bind(await hashPassword(pw, context.env), row.user_id).run();
     // Revoke every session after a password reset.
     await context.env.DB.prepare("UPDATE sessions SET revoked_at = datetime('now') WHERE user_id = ? AND revoked_at IS NULL")
       .bind(row.user_id).run();

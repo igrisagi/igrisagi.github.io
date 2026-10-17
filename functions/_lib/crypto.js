@@ -7,20 +7,29 @@
 import { scrypt } from 'node:crypto';
 import { base32Encode, base32Decode, constEq } from './util.js';
 
-var SCRYPT_N = 131072, SCRYPT_R = 8, SCRYPT_P = 1;
+// Hash cost is env-tunable (SCRYPT_N) so ops can lower it without a deploy
+// if platform CPU enforcement ever tightens; bounds keep it honest.
+var SCRYPT_R = 8, SCRYPT_P = 1;
 var PBKDF2_ITER = 100000; // legacy path only
+
+export function scryptN(env) {
+  var n = parseInt((env && env.SCRYPT_N) || '131072', 10);
+  if (!(n >= 16384 && n <= 131072) || (n & (n - 1)) !== 0) return 131072;
+  return n;
+}
 
 function b64(bytes) { return btoa(String.fromCharCode.apply(null, new Uint8Array(bytes))); }
 function unb64(s) { return Uint8Array.from(atob(s), function (c) { return c.charCodeAt(0); }); }
 
-export async function hashPassword(password) {
+export async function hashPassword(password, env) {
+  var N = scryptN(env);
   var salt = new Uint8Array(16);
   crypto.getRandomValues(salt);
   var key = await new Promise(function (resolve, reject) {
-    scrypt(password, salt, 32, { N: SCRYPT_N, r: SCRYPT_R, p: SCRYPT_P, maxmem: 256 * 1024 * 1024 },
+    scrypt(password, salt, 32, { N: N, r: SCRYPT_R, p: SCRYPT_P, maxmem: 256 * 1024 * 1024 },
       function (err, derived) { err ? reject(err) : resolve(derived); });
   });
-  return 'scrypt$' + SCRYPT_N + '$' + SCRYPT_R + '$' + SCRYPT_P + '$' + b64(salt) + '$' + b64(key);
+  return 'scrypt$' + N + '$' + SCRYPT_R + '$' + SCRYPT_P + '$' + b64(salt) + '$' + b64(key);
 }
 
 export async function verifyPassword(password, stored) {
