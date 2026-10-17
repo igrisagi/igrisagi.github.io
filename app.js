@@ -75,7 +75,15 @@ api('/api/auth/providers').then(function (d) {
 // Cloudflare Turnstile: rendered only when the server reports a site key.
 function mountTs(elId, tries) {
   if (!tsKey || !el(elId)) return;
-  if (window.turnstile) { tsWidgets[elId] = window.turnstile.render('#' + elId, { sitekey: tsKey }); return; }
+  if (tsWidgets[elId] !== undefined) return;
+  if (window.turnstile) {
+    window.turnstile.ready(function () {
+      if (el(elId) && tsWidgets[elId] === undefined) {
+        tsWidgets[elId] = window.turnstile.render('#' + elId, { sitekey: tsKey });
+      }
+    });
+    return;
+  }
   if ((tries || 0) < 25) setTimeout(function () { mountTs(elId, (tries || 0) + 1); }, 400);
 }
 function tsToken(elId) {
