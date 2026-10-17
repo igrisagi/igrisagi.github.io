@@ -47,8 +47,12 @@ function renderEnroll() {
     '<p><button type="button" class="action" id="gen">Generate my secret</button></p><div id="enrollbody"></div>');
   el('gen').addEventListener('click', function () {
     api('/api/auth/totp/enroll', 'POST', {}).then(function (d) {
-      el('enrollbody').innerHTML = '<div class="secret">' + esc(d.secret) + '</div>' +
-        '<p class="small">' + esc(d.otpauth_url) + '</p>' +
+      var qr = qrcode(0, 'M');
+      qr.addData(d.otpauth_url);
+      qr.make();
+      el('enrollbody').innerHTML = '<div id="qr">' + qr.createImgTag(5, 4) + '</div>' +
+        '<p class="small">Scan the QR with your authenticator app, or enter this key manually (shown once):</p>' +
+        '<div class="secret">' + esc(d.secret) + '</div>' +
         '<label for="code">6-digit code</label><input class="field" id="code" inputmode="numeric" maxlength="6">' +
         '<button type="button" class="action" id="confirm">Confirm</button><p class="status" id="st"></p>';
       el('confirm').addEventListener('click', function () {
