@@ -166,8 +166,10 @@
                 <li><span>Notes on papers I'm reading</span><span class="when">soon</span></li>
             </ul>
 
-            <h2 id="activity">Recently on GitHub</h2>
+            <section id="activity" hidden>
+            <h2>Recently on GitHub</h2>
             <ul id="repos"><li><span class="status">Loading from GitHub...</span></li></ul>
+            </section>
 
             <h2 id="contact">Contact</h2>
             <p>The best way to reach me is through GitHub: <a href="https://github.com/igrisagi">github.com/igrisagi</a>.</p>
@@ -208,9 +210,9 @@
         function render(repos) {
             repos = repos.filter(function (r) { return !r.fork && r.name !== 'igrisagi.github.io' && r.name !== 'erenlabs.me'; }).slice(0, 5);
             if (!repos.length) {
-                list.innerHTML = '<li><span class="status">Nothing public yet. Check back soon.</span></li>';
                 return;
             }
+            document.getElementById('activity').hidden = false;
             list.innerHTML = repos.map(function (r) {
                 return '<li class="repo"><span><a href="' + esc(r.html_url) + '">' + esc(r.name) + '</a>' +
                     (r.description ? '<small>' + esc(r.description) + '</small>' : '') +
@@ -225,7 +227,7 @@
             .then(function (d) { try { localStorage.setItem(key, JSON.stringify({ t: Date.now(), d: d })); } catch (e) {} render(d); })
             .catch(function () {
                 if (cached) render(cached.d);
-                else list.innerHTML = '<li><span class="status">Could not load right now. <a href="https://github.com/igrisagi?tab=repositories">See repositories on GitHub</a>.</span></li>';
+                else return;
             });
     })();
     </script>
